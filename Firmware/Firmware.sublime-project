@@ -51,9 +51,9 @@
 	"folders":
 	[
 		{
-			"path": "."
+			"path": ".",
 //	        "folder_exclude_patterns": [".svn", "._d", ".metadata", ".settings"],
-//	        "file_exclude_patterns": ["XS.c"]
+	        "file_exclude_patterns": ["watchdog.h"]
 		}
 	]
 }

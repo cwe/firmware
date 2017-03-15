@@ -3,6 +3,8 @@
 
 #define BOARD_UNKNOWN -1
 
+#define BOARD_RAMPS_13_EFB      33   // RAMPS 1.3 / 1.4 (Power outputs: Extruder, Fan, Bed)
+
 
 #define BOARD_RAMBO             301  // Rambo
 #define BOARD_RAMBO_MINI_1_3    302  // Rambo-mini 1.3
