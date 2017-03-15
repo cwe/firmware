@@ -3846,67 +3846,8 @@ static bool lcd_selfcheck_axis(int _axis, int _travel)
 
 static bool lcd_selfcheck_pulleys(int axis)
 {
-	float tmp_motor_loud[3] = DEFAULT_PWM_MOTOR_CURRENT_LOUD;
-	float tmp_motor[3] = DEFAULT_PWM_MOTOR_CURRENT;
-	float current_position_init;
-	float move;
-	bool endstop_triggered = false;
-	bool result = true;
-	int i;
-	unsigned long timeout_counter;
-	refresh_cmd_timeout();
-	manage_inactivity(true);
 
-	if (axis == 0) move = 50; //X_AXIS 
-		else move = 50; //Y_AXIS
-
-		current_position_init = current_position[axis];
-				
-		current_position[axis] += 2;
-		plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[3], manual_feedrate[0] / 60, active_extruder);
-		for (i = 0; i < 5; i++) {
-			refresh_cmd_timeout();
-			current_position[axis] = current_position[axis] + move;
-			digipot_current(0, 850); //set motor current higher
-			plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[3], 200, active_extruder);
-			st_synchronize();
-			if (SilentModeMenu == 1) digipot_current(0, tmp_motor[0]); //set back to normal operation currents
-			else digipot_current(0, tmp_motor_loud[0]); //set motor current back			
-			current_position[axis] = current_position[axis] - move;
-			plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[3], 50, active_extruder);
-			st_synchronize();
-			if ((READ(X_MIN_PIN) ^ X_MIN_ENDSTOP_INVERTING == 1) || (READ(Y_MIN_PIN) ^ Y_MIN_ENDSTOP_INVERTING == 1)) {
-				lcd_selftest_error(8, (axis == 0) ? "X" : "Y", "");
-				return(false);
-			}
-		}
-		timeout_counter = millis() + 2500;
-		endstop_triggered = false;
-		manage_inactivity(true);
-		while (!endstop_triggered) {
-			if ((READ(X_MIN_PIN) ^ X_MIN_ENDSTOP_INVERTING == 1) || (READ(Y_MIN_PIN) ^ Y_MIN_ENDSTOP_INVERTING == 1)) {
-				endstop_triggered = true;
-				if (current_position_init - 1 <= current_position[axis] && current_position_init + 1 >= current_position[axis]) {
-					current_position[axis] += 15;
-					plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[3], manual_feedrate[0] / 60, active_extruder);
-					st_synchronize();
-					return(true);
-				}
-				else {
-					lcd_selftest_error(8, (axis == 0) ? "X" : "Y", "");
-					return(false);
-				}
-			}
-			else {
-				current_position[axis] -= 1;
-				plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[3], manual_feedrate[0] / 60, active_extruder);
-				st_synchronize();
-				if (millis() > timeout_counter) {
-					lcd_selftest_error(8, (axis == 0) ? "X" : "Y", "");
-					return(false);
-				}
-			}
-		}		
+  return true;
 }
 
 static bool lcd_selfcheck_endstops()
