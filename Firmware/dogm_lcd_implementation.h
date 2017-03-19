@@ -15,6 +15,8 @@
 #ifndef ULTRA_LCD_IMPLEMENTATION_DOGM_H
 #define ULTRA_LCD_IMPLEMENTATION_DOGM_H
 
+char longFilenameOLD[LONG_FILENAME_LENGTH];
+
 /**
 * Implementation of the LCD display routines for a DOGM128 graphic display. These are common LCD 128x64 pixel graphic displays.
 **/
@@ -154,10 +156,26 @@ static void lcd_implementation_clear()
 //		} while( u8g.nextPage() );
 }
 
+static void lcd_implementation_init_noclear(
+  #if defined(LCD_PROGRESS_BAR) && defined(SDSUPPORT)
+    bool progress_bar_set=true
+  #endif
+) {
+}
+
 /* Arduino < 1.0.0 is missing a function to print PROGMEM strings, so we need to implement our own */
-static void lcd_printPGM(const char* str)
+void lcd_printPGM(const char* str)
 {
     char c;
+    while((c = pgm_read_byte(str++)) != '\0')
+    {
+			u8g.print(c);
+    }
+}
+
+void lcd_print_at_PGM(uint8_t x, uint8_t y, const char* str)
+{
+	char c;
     while((c = pgm_read_byte(str++)) != '\0')
     {
 			u8g.print(c);
@@ -337,6 +355,38 @@ static void lcd_implementation_drawmenu_generic(uint8_t row, const char* pstr, c
 		u8g.setColorIndex(1);		// restore settings to black on white
 }
 
+static void lcd_implementation_drawmenu_generic_RAM(uint8_t row, const char* pstr, char pre_char, char post_char)
+{
+    char c;
+    
+    uint8_t n = LCD_WIDTH - 1 - 2;
+		
+		if ((pre_char == '>') || (pre_char == LCD_STR_UPLEVEL[0] ))
+		   {
+			u8g.setColorIndex(1);		// black on white
+			u8g.drawBox (0, row*DOG_CHAR_HEIGHT + 3, 128, DOG_CHAR_HEIGHT);
+			u8g.setColorIndex(0);		// following text must be white on black
+		   } else u8g.setColorIndex(1); // unmarked text is black on white
+		
+		u8g.setPrintPos(0 * DOG_CHAR_WIDTH, (row + 1) * DOG_CHAR_HEIGHT);
+		u8g.print(pre_char == '>' ? ' ' : pre_char);	// Row selector is obsolete
+
+
+    while( ((c = *pstr) != '\0') && (n>0) )
+    {
+		u8g.print(c);
+        pstr++;
+        n--;
+    }
+    while(n--){
+					u8g.print(' ');
+		}
+	   
+		u8g.print(post_char);
+		u8g.print(' ');
+		u8g.setColorIndex(1);		// restore settings to black on white
+}
+
 static void _drawmenu_setting_edit_generic(uint8_t row, const char* pstr, char pre_char, const char* data, bool pgm) {
   char c;
   uint8_t n = LCD_WIDTH - 1 - 2 - (pgm ? strlen_P(data) : strlen(data));
@@ -409,6 +459,16 @@ void lcd_implementation_drawedit(const char* pstr, char* value)
 		u8g.print(value);
 }
 
+void lcd_implementation_drawedit_2(const char* pstr, char* value)
+{
+		u8g.setPrintPos(0 * DOG_CHAR_WIDTH_LARGE, (u8g.getHeight() - 1 - DOG_CHAR_HEIGHT_LARGE) - (1 * DOG_CHAR_HEIGHT_LARGE) - START_ROW );
+		u8g.setFont(u8g_font_9x18);
+		lcd_printPGM(pstr);
+		u8g.print(':');
+		u8g.setPrintPos((14 - strlen(value)) * DOG_CHAR_WIDTH_LARGE, (u8g.getHeight() - 1 - DOG_CHAR_HEIGHT_LARGE) - (1 * DOG_CHAR_HEIGHT_LARGE) - START_ROW );
+		u8g.print(value);
+}
+
 static void _drawmenu_sd(uint8_t row, const char* pstr, const char* filename, char * const longFilename, bool isDir, bool isSelected) {
   char c;
   uint8_t n = LCD_WIDTH - 1;
@@ -439,6 +499,20 @@ static void _drawmenu_sd(uint8_t row, const char* pstr, const char* filename, ch
   if (isSelected) u8g.setColorIndex(1); // black on white
 }
 
+static void lcd_set_custom_characters(
+  #if defined(LCD_PROGRESS_BAR) && defined(SDSUPPORT)
+    bool progress_bar_set=true
+  #endif
+) {}
+
+void lcd_set_custom_characters_arrows() {}
+
+void lcd_set_custom_characters_nextpage() {}
+
+void lcd_set_custom_characters_degree() {}
+
+static void lcd_implementation_write(char c) {}
+
 #define lcd_implementation_drawmenu_sdfile_selected(row, pstr, filename, longFilename) _drawmenu_sd(row, pstr, filename, longFilename, false, true)
 #define lcd_implementation_drawmenu_sdfile(row, pstr, filename, longFilename) _drawmenu_sd(row, pstr, filename, longFilename, false, false)
 #define lcd_implementation_drawmenu_sddirectory_selected(row, pstr, filename, longFilename) _drawmenu_sd(row, pstr, filename, longFilename, true, true)
@@ -452,6 +526,19 @@ static void _drawmenu_sd(uint8_t row, const char* pstr, const char* filename, ch
 #define lcd_implementation_drawmenu_gcode(row, pstr, gcode) lcd_implementation_drawmenu_generic(row, pstr, ' ', ' ')
 #define lcd_implementation_drawmenu_function_selected(row, pstr, data) lcd_implementation_drawmenu_generic(row, pstr, '>', ' ')
 #define lcd_implementation_drawmenu_function(row, pstr, data) lcd_implementation_drawmenu_generic(row, pstr, ' ', ' ')
+
+#define lcd_implementation_drawmenu_back_selected(row, pstr, data) lcd_implementation_drawmenu_generic(row, pstr, LCD_STR_UPLEVEL[0], LCD_STR_UPLEVEL[0])
+#define lcd_implementation_drawmenu_back(row, pstr, data) lcd_implementation_drawmenu_generic(row, pstr, ' ', LCD_STR_UPLEVEL[0])
+#define lcd_implementation_drawmenu_back_RAM_selected(row, str, data) lcd_implementation_drawmenu_generic_RAM(row, str, LCD_STR_UPLEVEL[0], LCD_STR_UPLEVEL[0])
+#define lcd_implementation_drawmenu_back_RAM(row, str, data) lcd_implementation_drawmenu_generic_RAM(row, str, ' ', LCD_STR_UPLEVEL[0])
+#define lcd_implementation_drawmenu_submenu_selected(row, pstr, data) lcd_implementation_drawmenu_generic(row, pstr, '>', LCD_STR_ARROW_RIGHT[0])
+#define lcd_implementation_drawmenu_submenu(row, pstr, data) lcd_implementation_drawmenu_generic(row, pstr, ' ', LCD_STR_ARROW_RIGHT[0])
+#define lcd_implementation_drawmenu_gcode_selected(row, pstr, gcode) lcd_implementation_drawmenu_generic(row, pstr, '>', ' ')
+#define lcd_implementation_drawmenu_gcode(row, pstr, gcode) lcd_implementation_drawmenu_generic(row, pstr, ' ', ' ')
+#define lcd_implementation_drawmenu_function_selected(row, pstr, data) lcd_implementation_drawmenu_generic(row, pstr, '>', ' ')
+#define lcd_implementation_drawmenu_function(row, pstr, data) lcd_implementation_drawmenu_generic(row, pstr, ' ', ' ')
+#define lcd_implementation_drawmenu_setlang_selected(row, pstr, data) lcd_implementation_drawmenu_generic(row, pstr, '>', ' ')
+#define lcd_implementation_drawmenu_setlang(row, pstr, data) lcd_implementation_drawmenu_generic(row, pstr, ' ', ' ')
 
 static void lcd_implementation_quick_feedback()
 {

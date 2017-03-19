@@ -68,10 +68,6 @@
 #include "Wire.h"
 #endif
 
-#ifdef ULTRALCD
-#include "ultralcd.h"
-#endif
-
 #if NUM_SERVOS > 0
 #include "Servo.h"
 #endif
@@ -81,9 +77,6 @@
 #endif
 
 #define VERSION_STRING  "1.0.2"
-
-
-#include "ultralcd.h"
 
 // Macros for bit masks
 #define BIT(b) (1<<(b))
@@ -892,7 +885,7 @@ static void lcd_language_menu();
 int  er_progress = 0;
 void factory_reset(char level, bool quiet)
 {	
-	lcd_implementation_clear();
+	lcd_clear();
 	    
     switch (level) {
                    
@@ -948,7 +941,7 @@ void factory_reset(char level, bool quiet)
 
 			er_progress = 0;
 			lcd_print_at_PGM(3, 3, PSTR("      "));
-			lcd_implementation_print_at(3, 3, er_progress);
+			lcd_print_at(3, 3, er_progress);
 
 			// Erase EEPROM
 			for (int i = 0; i < 4096; i++) {
@@ -957,7 +950,7 @@ void factory_reset(char level, bool quiet)
 				if (i % 41 == 0) {
 					er_progress++;
 					lcd_print_at_PGM(3, 3, PSTR("      "));
-					lcd_implementation_print_at(3, 3, er_progress);
+					lcd_print_at(3, 3, er_progress);
 					lcd_printPGM(PSTR("%"));
 				}
 
@@ -1048,7 +1041,7 @@ void setup()
 	  _delay_ms(1000);
 	  if (!READ(BTN_ENC))
 	  {
-          lcd_implementation_clear();
+          lcd_clear();
           
 		  
 		  lcd_printPGM(PSTR("Factory RESET"));
@@ -1193,7 +1186,7 @@ int serial_read_stream() {
     setTargetHotend(0, 0);
     setTargetBed(0);
 
-    lcd_implementation_clear();
+    lcd_clear();
     lcd_printPGM(PSTR(" Upload in progress"));
 
     // first wait for how many bytes we will receive
@@ -3405,7 +3398,7 @@ void process_commands()
             refresh_cmd_timeout();
 			if (((degHotend(0)>MAX_HOTEND_TEMP_CALIBRATION) || (degBed() > MAX_BED_TEMP_CALIBRATION))&& (!onlyZ)) lcd_wait_for_cool_down();
 			lcd_display_message_fullscreen_P(MSG_MEASURE_BED_REFERENCE_HEIGHT_LINE1);
-			lcd_implementation_print_at(0, 3, 1);
+			lcd_print_at(0, 3, 1);
 			lcd_printPGM(MSG_MEASURE_BED_REFERENCE_HEIGHT_LINE2);
 
             // Move the print head close to the bed.

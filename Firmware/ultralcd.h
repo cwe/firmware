@@ -186,17 +186,35 @@ char *ftostr51(const float &x);
 char *ftostr52(const float &x);
 
 
-extern void lcd_implementation_clear();
+extern void lcd_clear();
+extern void lcd_write(char c);
 extern void lcd_printPGM(const char* str);
 extern void lcd_print_at_PGM(uint8_t x, uint8_t y, const char* str);
-extern void lcd_implementation_write(char c);
+
+void lcd_print_at(uint8_t x, uint8_t y, int8_t i);
+void lcd_print_at(uint8_t x, uint8_t y, int i);
+void lcd_print_at(uint8_t x, uint8_t y, const char *str);
+
+static void lcd_disable_farm_mode();
+
+void lcd_ping();
+void lcd_printer_connected();
+void lcd_wait_for_cool_down();
+void adjust_bed_reset();
+
+
+
+char reset_menu();
+/*
+
+
 extern void lcd_implementation_print(const char *str);
 extern void lcd_implementation_print(int8_t i);
-extern void lcd_implementation_print_at(uint8_t x, uint8_t y, int8_t i);
+
 extern void lcd_implementation_print(int i);
-extern void lcd_implementation_print_at(uint8_t x, uint8_t y, int i);
+
 extern void lcd_implementation_print(float f);
-extern void lcd_implementation_print_at(uint8_t x, uint8_t y, const char *str);
+
 
 
 void change_extr(int extr);
@@ -212,12 +230,12 @@ static void extr_unload_0();
 static void extr_unload_1();
 static void extr_unload_2();
 static void extr_unload_3();
-static void lcd_disable_farm_mode();
+
 
 void stack_error();
 static void lcd_ping_allert();
-void lcd_printer_connected();
-void lcd_ping();
+
+
 
 void lcd_calibrate_extruder();
 void lcd_farm_sdcard_menu();
@@ -227,11 +245,11 @@ void lcd_farm_sdcard_menu();
 void lcd_farm_sdcard_menu_w();
 //void get_description();
 
-void lcd_wait_for_cool_down();
-void adjust_bed_reset();
+
 void lcd_extr_cal_reset();
 
 union MenuData;
 
-char reset_menu();
+
+*/
 #endif //ULTRALCD_H
