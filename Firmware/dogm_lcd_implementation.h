@@ -324,34 +324,67 @@ static void lcd_implementation_status_screen()
 
 static void lcd_implementation_drawmenu_generic(uint8_t row, const char* pstr, char pre_char, char post_char)
 {
-    char c;
-    
-    uint8_t n = LCD_WIDTH - 1 - 2;
-		
-		if ((pre_char == '>') || (pre_char == LCD_STR_UPLEVEL[0] ))
-		   {
-			u8g.setColorIndex(1);		// black on white
-			u8g.drawBox (0, row*DOG_CHAR_HEIGHT + 3, 128, DOG_CHAR_HEIGHT);
-			u8g.setColorIndex(0);		// following text must be white on black
-		   } else u8g.setColorIndex(1); // unmarked text is black on white
-		
-		u8g.setPrintPos(0 * DOG_CHAR_WIDTH, (row + 1) * DOG_CHAR_HEIGHT);
-		u8g.print(pre_char == '>' ? ' ' : pre_char);	// Row selector is obsolete
+	char c;
+
+	uint8_t n = LCD_WIDTH - 1 - 2;
+
+	if ((pre_char == '>') || (pre_char == LCD_STR_UPLEVEL[0] ))
+	{
+		u8g.setColorIndex(1);		// black on white
+		u8g.drawBox (0, row*DOG_CHAR_HEIGHT + 3, 128, DOG_CHAR_HEIGHT);
+		u8g.setColorIndex(0);		// following text must be white on black
+	} else u8g.setColorIndex(1); // unmarked text is black on white
+
+	u8g.setPrintPos(0 * DOG_CHAR_WIDTH, (row + 1) * DOG_CHAR_HEIGHT);
+	u8g.print(pre_char == '>' ? ' ' : pre_char);	// Row selector is obsolete
 
 
-    while( (c = pgm_read_byte(pstr)) != '\0' )
-    {
+	while( (c = pgm_read_byte(pstr)) != '\0' )
+	{
 		u8g.print(c);
-        pstr++;
-        n--;
-    }
-    while(n--){
-					u8g.print(' ');
-		}
-	   
-		u8g.print(post_char);
+		pstr++;
+		n--;
+	}
+	
+	while(n--){
 		u8g.print(' ');
-		u8g.setColorIndex(1);		// restore settings to black on white
+	}
+
+	u8g.print(post_char);
+	u8g.print(' ');
+	u8g.setColorIndex(1);		// restore settings to black on white
+}
+
+static void lcd_implementation_drawmenu_generic_RAM(uint8_t row, const char* str, char pre_char, char post_char)
+{
+	char c;
+
+	uint8_t n = LCD_WIDTH - 1 - 2;
+
+	if ((pre_char == '>') || (pre_char == LCD_STR_UPLEVEL[0] ))
+	{
+		u8g.setColorIndex(1);		// black on white
+		u8g.drawBox (0, row*DOG_CHAR_HEIGHT + 3, 128, DOG_CHAR_HEIGHT);
+		u8g.setColorIndex(0);		// following text must be white on black
+	} else u8g.setColorIndex(1); // unmarked text is black on white
+
+	u8g.setPrintPos(0 * DOG_CHAR_WIDTH, (row + 1) * DOG_CHAR_HEIGHT);
+	u8g.print(pre_char == '>' ? ' ' : pre_char);	// Row selector is obsolete
+
+	while( ((c = *str) != '\0') && (n>0) )
+	{
+		u8g.print(c);
+		str++;
+		n--;
+	}
+	
+	while(n--){
+		u8g.print(' ');
+	}
+
+	u8g.print(post_char);
+	u8g.print(' ');
+	u8g.setColorIndex(1);		// restore settings to black on white
 }
 
 static void _drawmenu_setting_edit_generic(uint8_t row, const char* pstr, char pre_char, const char* data, bool pgm) {
@@ -463,6 +496,8 @@ static void _drawmenu_sd(uint8_t row, const char* pstr, const char* filename, ch
 
 #define lcd_implementation_drawmenu_back_selected(row, pstr, data) lcd_implementation_drawmenu_generic(row, pstr, LCD_STR_UPLEVEL[0], LCD_STR_UPLEVEL[0])
 #define lcd_implementation_drawmenu_back(row, pstr, data) lcd_implementation_drawmenu_generic(row, pstr, ' ', LCD_STR_UPLEVEL[0])
+#define lcd_implementation_drawmenu_back_RAM_selected(row, str, data) lcd_implementation_drawmenu_generic_RAM(row, str, LCD_STR_UPLEVEL[0], LCD_STR_UPLEVEL[0])
+#define lcd_implementation_drawmenu_back_RAM(row, str, data) lcd_implementation_drawmenu_generic_RAM(row, str, ' ', LCD_STR_UPLEVEL[0])
 #define lcd_implementation_drawmenu_submenu_selected(row, pstr, data) lcd_implementation_drawmenu_generic(row, pstr, '>', LCD_STR_ARROW_RIGHT[0])
 #define lcd_implementation_drawmenu_submenu(row, pstr, data) lcd_implementation_drawmenu_generic(row, pstr, ' ', LCD_STR_ARROW_RIGHT[0])
 #define lcd_implementation_drawmenu_gcode_selected(row, pstr, gcode) lcd_implementation_drawmenu_generic(row, pstr, '>', ' ')
