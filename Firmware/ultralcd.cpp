@@ -290,6 +290,10 @@ static void lcd_clear() {
   lcd_implementation_clear();
 }
 
+static void lcd_printPGM(const char* str) {
+  lcd_implementation_printPGM(str);
+}
+
 static void lcd_goto_menu(menuFunc_t menu, const uint32_t encoder = 0, const bool feedback = true, bool reset_menu_state = true) {
   if (currentMenu != menu) {
     currentMenu = menu;
