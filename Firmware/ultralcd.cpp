@@ -294,6 +294,10 @@ static void lcd_printPGM(const char* str) {
   lcd_implementation_printPGM(str);
 }
 
+static void lcd_print_at_PGM(uint8_t x, uint8_t y, const char* str) {
+  lcd_implementation_print_at_PGM(x, y, str);
+}
+
 static void lcd_goto_menu(menuFunc_t menu, const uint32_t encoder = 0, const bool feedback = true, bool reset_menu_state = true) {
   if (currentMenu != menu) {
     currentMenu = menu;
@@ -504,8 +508,7 @@ static void lcd_status_screen()
 #endif //ULTIPANEL
 
   if (farm_mode && !printer_connected) {
-	  lcd.setCursor(0, 3);
-	  lcd_printPGM(MSG_PRINTER_DISCONNECTED);
+	  lcd_print_at_PGM(0, 3, MSG_PRINTER_DISCONNECTED);
   }
 
 }

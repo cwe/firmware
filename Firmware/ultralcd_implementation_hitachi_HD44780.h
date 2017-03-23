@@ -599,7 +599,7 @@ void lcd_implementation_printPGM(const char* str)
     }
 }
 
-void lcd_print_at_PGM(uint8_t x, uint8_t y, const char* str)
+void lcd_implementation_print_at_PGM(uint8_t x, uint8_t y, const char* str)
 {
     lcd.setCursor(x, y);
     char c;

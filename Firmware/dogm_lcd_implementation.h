@@ -160,8 +160,20 @@ static void lcd_implementation_clear()
 }
 
 /* Arduino < 1.0.0 is missing a function to print PROGMEM strings, so we need to implement our own */
-static void lcd_implementation_printPGM(const char* str)
+void lcd_implementation_printPGM(const char* str)
 {
+    char c;
+    while((c = pgm_read_byte(str++)) != '\0')
+    {
+			u8g.print(c);
+    }
+}
+
+void lcd_implementation_print_at_PGM(uint8_t x, uint8_t y, const char* str)
+{
+
+	//TODO: check this positioning
+    u8g.setPrintPos(x * DOG_CHAR_WIDTH, (y + 1) * DOG_CHAR_HEIGHT);
     char c;
     while((c = pgm_read_byte(str++)) != '\0')
     {
