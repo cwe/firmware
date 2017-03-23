@@ -140,6 +140,11 @@ static void lcd_implementation_init()
 	   } while( u8g.nextPage() );
 }
 
+static void lcd_implementation_init_noclear()
+{
+	//TODO
+}
+
 static void lcd_implementation_clear()
 {
 // NO NEED TO IMPLEMENT LIKE SO. Picture loop automatically clears the display.
