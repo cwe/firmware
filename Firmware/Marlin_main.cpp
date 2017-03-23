@@ -68,10 +68,6 @@
 #include "Wire.h"
 #endif
 
-#ifdef ULTRALCD
-#include "ultralcd.h"
-#endif
-
 #if NUM_SERVOS > 0
 #include "Servo.h"
 #endif
@@ -81,9 +77,6 @@
 #endif
 
 #define VERSION_STRING  "1.0.2"
-
-
-#include "ultralcd.h"
 
 // Macros for bit masks
 #define BIT(b) (1<<(b))
