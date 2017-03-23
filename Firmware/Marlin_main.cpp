@@ -885,7 +885,7 @@ static void lcd_language_menu();
 int  er_progress = 0;
 void factory_reset(char level, bool quiet)
 {	
-	lcd_implementation_clear();
+	lcd_clear();
 	    
     switch (level) {
                    
@@ -1041,7 +1041,7 @@ void setup()
 	  _delay_ms(1000);
 	  if (!READ(BTN_ENC))
 	  {
-          lcd_implementation_clear();
+          lcd_clear();
           
 		  
 		  lcd_printPGM(PSTR("Factory RESET"));
@@ -1186,7 +1186,7 @@ int serial_read_stream() {
     setTargetHotend(0, 0);
     setTargetBed(0);
 
-    lcd_implementation_clear();
+    lcd_clear();
     lcd_printPGM(PSTR(" Upload in progress"));
 
     // first wait for how many bytes we will receive

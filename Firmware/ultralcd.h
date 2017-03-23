@@ -186,7 +186,12 @@ char *ftostr51(const float &x);
 char *ftostr52(const float &x);
 
 
-extern void lcd_implementation_clear();
+static void lcd_clear();
+
+
+
+
+
 extern void lcd_printPGM(const char* str);
 extern void lcd_print_at_PGM(uint8_t x, uint8_t y, const char* str);
 extern void lcd_implementation_write(char c);

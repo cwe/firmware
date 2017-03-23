@@ -285,6 +285,11 @@ uint8_t lcdDrawUpdate = 2;                  /* Set to none-zero when the LCD nee
 // float raw_Ki, raw_Kd;
 #endif
 
+
+static void lcd_clear() {
+  lcd_implementation_clear();
+}
+
 static void lcd_goto_menu(menuFunc_t menu, const uint32_t encoder = 0, const bool feedback = true, bool reset_menu_state = true) {
   if (currentMenu != menu) {
     currentMenu = menu;
