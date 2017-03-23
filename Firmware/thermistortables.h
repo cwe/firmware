@@ -1061,6 +1061,27 @@ const short temptable_147[][2] PROGMEM = {
   PtLine(300,100,4700)
 };
 #endif
+#if (THERMISTORHEATER_0 == 999) || (THERMISTORHEATER_1 == 999) || (THERMISTORHEATER_2 == 999) || (THERMISTORHEATER_3 == 999) || (THERMISTORBED == 999) //User defined table
+  // Dummy Thermistor table.. It will ALWAYS read a fixed value.
+  #ifndef DUMMY_THERMISTOR_999_VALUE
+    #define DUMMY_THERMISTOR_999_VALUE 25
+  #endif
+  const short temptable_999[][2] PROGMEM = {
+    {1*OVERSAMPLENR, DUMMY_THERMISTOR_999_VALUE},
+    {1023*OVERSAMPLENR, DUMMY_THERMISTOR_999_VALUE}
+};
+#endif
+
+#if (THERMISTORHEATER_0 == 998) || (THERMISTORHEATER_1 == 998) || (THERMISTORHEATER_2 == 998) || (THERMISTORHEATER_3 == 998) || (THERMISTORBED == 998) //User defined table
+  // Dummy Thermistor table.. It will ALWAYS read a fixed value.
+  #ifndef DUMMY_THERMISTOR_998_VALUE
+    #define DUMMY_THERMISTOR_998_VALUE 25
+  #endif
+  const short temptable_998[][2] PROGMEM = {
+    {1*OVERSAMPLENR, DUMMY_THERMISTOR_998_VALUE},
+    {1023*OVERSAMPLENR, DUMMY_THERMISTOR_998_VALUE}
+};
+#endif
 #if (THERMISTORHEATER_0 == 1010) || (THERMISTORHEATER_1 == 1010) || (THERMISTORHEATER_2 == 1010) || (THERMISTORBED == 1010) // Pt1000 with 1k0 pullup
 const short temptable_1010[][2] PROGMEM = {
   PtLine(0,1000,1000)
